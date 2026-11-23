@@ -1,4 +1,8 @@
 package com.devsaif.task.management.entity;
 
-public enum Priority {
+public enum TaskPriority {
+
+    LOW,
+    MEDIUM,
+    HIGH
 }
