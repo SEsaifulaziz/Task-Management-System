@@ -1,15 +1,17 @@
 package com.devsaif.task.management.repository;
 
+import com.devsaif.task.management.entity.TaskEntity;
 import com.devsaif.task.management.entity.TaskPriority;
 import com.devsaif.task.management.entity.TaskStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.scheduling.config.Task;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-public interface TaskRepository extends JpaRepository<Task, Long> {
+@Repository
+public interface TaskRepository extends JpaRepository<TaskEntity, Long> {
 
-    List<Task> findByStatus(TaskStatus status);
+    List<TaskEntity> findByStatus(TaskStatus status);
 
-    List<Task> findByPriority(TaskPriority priority);
+    List<TaskEntity> findByPriority(TaskPriority priority);
 }
