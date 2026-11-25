@@ -25,10 +25,12 @@ public class TaskEntity {
 
     private String title;
 
-    private String Description;
+    private String description;
 
+    @Enumerated(EnumType.STRING)
     private TaskStatus status;
 
+    @Enumerated(EnumType.STRING)
     private TaskPriority priority;
 
     private LocalDate dueDate;
