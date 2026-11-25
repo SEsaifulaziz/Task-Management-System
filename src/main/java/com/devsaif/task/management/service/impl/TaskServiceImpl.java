@@ -74,13 +74,10 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public List<TaskResponse> getTaskByStatus(TaskStatus taskStatus) {
 
-        List<TaskEntity> task = taskRepository.findByStatus(taskStatus);
-
-        if (!task.isEmpty() && !task.equals("")){
-            return taskRepository.findByStatus(taskStatus)
-                    .stream().map(taskMapper::toDto).toList();
-        }
-        throw new ResourceNotFoundException("task with status " +taskStatus+ " not found");
+        return taskRepository.findByStatus(taskStatus)
+                .stream()
+                .map(taskMapper::toDto)
+                .toList();
     }
 
     @Override
