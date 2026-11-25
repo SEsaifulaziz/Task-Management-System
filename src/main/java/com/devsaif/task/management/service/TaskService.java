@@ -21,7 +21,7 @@ public interface TaskService {
 
     List<TaskResponse> getTaskByStatus (TaskStatus taskStatus);
 
-    List<TaskPriority> getTaskByPriority(TaskPriority taskPriority);
+    List<TaskResponse> getTaskByPriority(TaskPriority taskPriority);
 
 
 }
