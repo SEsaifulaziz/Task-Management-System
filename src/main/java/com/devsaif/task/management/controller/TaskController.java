@@ -2,6 +2,7 @@ package com.devsaif.task.management.controller;
 
 import com.devsaif.task.management.dto.TaskRequest;
 import com.devsaif.task.management.dto.TaskResponse;
+import com.devsaif.task.management.entity.TaskEntity;
 import com.devsaif.task.management.service.TaskService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +33,13 @@ public class TaskController {
     public ResponseEntity<TaskResponse> getById(@PathVariable Long id){
         TaskResponse task = taskService.getTaskById(id);
         return ResponseEntity.ok(task);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<TaskResponse> updateTask(@PathVariable Long id, @RequestBody TaskRequest taskRequest) {
+        TaskResponse taskResponse = taskService.updateTask(id, taskRequest);
+
+        return ResponseEntity.ok(taskResponse);
     }
 }
 
