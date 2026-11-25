@@ -1,6 +1,7 @@
 package com.devsaif.task.management.service.impl;
 
 
+import com.devsaif.task.management.dto.TaskDashboardResponse;
 import com.devsaif.task.management.dto.TaskRequest;
 import com.devsaif.task.management.dto.TaskResponse;
 import com.devsaif.task.management.entity.TaskEntity;
@@ -14,6 +15,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
 
 @Service
 @AllArgsConstructor
@@ -71,6 +74,38 @@ public class TaskServiceImpl implements TaskService {
 
         TaskEntity newTask = taskRepository.save(taskEntity);
         return taskMapper.toDto(newTask);
+    }
+
+    @Override
+    public TaskDashboardResponse getDashBoardStatistics() {
+
+        long totalTasks = taskRepository.count();
+
+        long completedTasks =
+                taskRepository.countByStatus(TaskStatus.COMPLETED);
+
+        long inProgressTasks =
+                taskRepository.countByStatus(TaskStatus.IN_PROGRESS);
+
+        long pendingTasks =
+                taskRepository.countByStatus(TaskStatus.TODO);
+
+        long highPriorityTasks =
+                taskRepository.countByPriority(TaskPriority.HIGH);
+
+        long overdueTasks =
+                taskRepository.countByDueDateBeforeAndStatusNot(
+                        LocalDate.now(),
+                        TaskStatus.COMPLETED
+                );
+        return new TaskDashboardResponse(
+                totalTasks,
+                completedTasks,
+                inProgressTasks,
+                pendingTasks,
+                highPriorityTasks,
+                overdueTasks
+        );
     }
 
 }
