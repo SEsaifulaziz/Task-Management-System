@@ -5,15 +5,15 @@ import com.devsaif.task.management.entity.TaskStatus;
 
 import java.time.LocalDate;
 
-public class TaskRequest {
-    String title;
+public record TaskRequest (
+    String title,
 
-    String description;
+    String description,
 
-    TaskStatus status;
+    TaskStatus status,
 
-    TaskPriority priority;
+    TaskPriority priority,
 
-    LocalDate dueDate;
+    LocalDate dueDate
 
-}
+) {}
