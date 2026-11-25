@@ -2,7 +2,6 @@ package com.devsaif.task.management.controller;
 
 import com.devsaif.task.management.dto.TaskRequest;
 import com.devsaif.task.management.dto.TaskResponse;
-import com.devsaif.task.management.entity.TaskEntity;
 import com.devsaif.task.management.entity.TaskPriority;
 import com.devsaif.task.management.entity.TaskStatus;
 import com.devsaif.task.management.service.TaskService;
@@ -14,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/tasks")
 @RequiredArgsConstructor
 public class TaskController {
 
@@ -23,7 +22,9 @@ public class TaskController {
     @PostMapping
     public ResponseEntity<TaskResponse> createTask(@RequestBody TaskRequest taskRequest) {
         TaskResponse task = taskService.createTask(taskRequest);
-        return ResponseEntity.ok(task);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(task);
     }
 
     @GetMapping
