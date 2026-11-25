@@ -83,12 +83,9 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public List<TaskResponse> getTaskByPriority(TaskPriority taskPriority) {
 
-        List<TaskEntity> task = taskRepository.findByPriority(taskPriority);
-
-        if (!task.isEmpty() && !task.equals("")){
-            return taskRepository.findByPriority(taskPriority)
-                    .stream().map(taskMapper::toDto).toList();
+        return taskRepository.findByPriority(taskPriority)
+                    .stream()
+                .map(taskMapper::toDto)
+                .toList();
         }
-        throw new ResourceNotFoundException("task with status " +taskPriority+ " not found");
-    }
 }
