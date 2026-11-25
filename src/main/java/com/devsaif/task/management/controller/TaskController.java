@@ -1,5 +1,6 @@
 package com.devsaif.task.management.controller;
 
+import com.devsaif.task.management.dto.TaskDashboardResponse;
 import com.devsaif.task.management.dto.TaskRequest;
 import com.devsaif.task.management.dto.TaskResponse;
 import com.devsaif.task.management.entity.TaskPriority;
@@ -36,6 +37,11 @@ public class TaskController {
                 .body(task);
     }
 
+    @GetMapping("/dashboard")
+    public ResponseEntity<TaskDashboardResponse> getDashboardStatistics() {
+        return ResponseEntity.ok(taskService.getDashBoardStatistics());
+    }
+
     @GetMapping
     public ResponseEntity<Page<TaskResponse>> getAll(
             @RequestParam(required = false) TaskStatus status,
@@ -66,18 +72,6 @@ public class TaskController {
 
         return ResponseEntity.ok(taskResponse);
     }
-
-//    @GetMapping("/status/{status}")
-//    public ResponseEntity<List<TaskResponse>> getByStatus(@PathVariable TaskStatus status){
-//        List<TaskResponse> task = taskService.getTaskByStatus(status);
-//        return ResponseEntity.ok(task);
-//    }
-//
-//    @GetMapping("/priority/{priority}")
-//    public ResponseEntity<List<TaskResponse>> getByPriority(@PathVariable TaskPriority priority){
-//        List<TaskResponse> task = taskService.getTaskByPriority(priority);
-//        return ResponseEntity.ok(task);
-//    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<TaskResponse> deleteById(@PathVariable Long id){
