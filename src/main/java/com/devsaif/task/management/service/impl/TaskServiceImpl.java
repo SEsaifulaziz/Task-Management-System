@@ -11,11 +11,9 @@ import com.devsaif.task.management.mapper.TaskMapper;
 import com.devsaif.task.management.repository.TaskRepository;
 import com.devsaif.task.management.service.TaskService;
 import lombok.AllArgsConstructor;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -35,9 +33,13 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public List<TaskResponse> getAllTasks() {
-        return taskRepository.findAll()
-                .stream().map(taskMapper::toDto).toList();
+    public Page<TaskResponse> getTasks(
+            TaskStatus status,
+            TaskPriority priority,
+            Pageable pageable
+    ) {
+        return taskRepository.findByFilters(status, priority, pageable)
+                .map(taskMapper::toDto);
     }
 
     @Override
@@ -71,21 +73,4 @@ public class TaskServiceImpl implements TaskService {
         return taskMapper.toDto(newTask);
     }
 
-    @Override
-    public List<TaskResponse> getTaskByStatus(TaskStatus taskStatus) {
-
-        return taskRepository.findByStatus(taskStatus)
-                .stream()
-                .map(taskMapper::toDto)
-                .toList();
-    }
-
-    @Override
-    public List<TaskResponse> getTaskByPriority(TaskPriority taskPriority) {
-
-        return taskRepository.findByPriority(taskPriority)
-                    .stream()
-                .map(taskMapper::toDto)
-                .toList();
-        }
 }
