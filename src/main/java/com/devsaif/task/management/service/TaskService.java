@@ -2,7 +2,6 @@ package com.devsaif.task.management.service;
 
 import com.devsaif.task.management.dto.TaskRequest;
 import com.devsaif.task.management.dto.TaskResponse;
-import com.devsaif.task.management.entity.TaskEntity;
 import com.devsaif.task.management.entity.TaskPriority;
 import com.devsaif.task.management.entity.TaskStatus;
 
@@ -14,7 +13,7 @@ public interface TaskService {
 
     List<TaskResponse> getAllTasks();
 
-    TaskResponse getTaskById();
+    TaskResponse getTaskById(Long id);
 
     void deleteTask(Long id);
 
