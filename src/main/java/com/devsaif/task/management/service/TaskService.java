@@ -1,5 +1,6 @@
 package com.devsaif.task.management.service;
 
+import com.devsaif.task.management.dto.TaskDashboardResponse;
 import com.devsaif.task.management.dto.TaskRequest;
 import com.devsaif.task.management.dto.TaskResponse;
 import com.devsaif.task.management.entity.TaskPriority;
@@ -7,7 +8,6 @@ import com.devsaif.task.management.entity.TaskStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.util.List;
 
 public interface TaskService {
 
@@ -24,4 +24,6 @@ public interface TaskService {
     void deleteTask(Long id);
 
     TaskResponse updateTask(Long id, TaskRequest taskRequest);
+
+    TaskDashboardResponse getDashBoardStatistics();
 }
