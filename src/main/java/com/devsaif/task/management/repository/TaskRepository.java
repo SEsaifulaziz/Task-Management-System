@@ -10,6 +10,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
+
 
 @Repository
 public interface TaskRepository extends JpaRepository<TaskEntity, Long> {
@@ -24,4 +26,11 @@ public interface TaskRepository extends JpaRepository<TaskEntity, Long> {
            @Param("priority") TaskPriority priority,
            Pageable pageable
    );
+
+    long countByStatus(TaskStatus taskStatus);
+    long countByPriority(TaskPriority taskPriority);
+    long countByDueDateBeforeAndStatusNot(
+            LocalDate date,
+            TaskStatus taskStatus
+    );
 }
