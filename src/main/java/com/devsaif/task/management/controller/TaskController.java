@@ -7,11 +7,14 @@ import com.devsaif.task.management.entity.TaskStatus;
 import com.devsaif.task.management.service.TaskService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/tasks")
@@ -29,8 +32,20 @@ public class TaskController {
     }
 
     @GetMapping
-    public ResponseEntity<List<TaskResponse>> getAll(){
-        List<TaskResponse> tasks = taskService.getAllTasks();
+    public ResponseEntity<Page<TaskResponse>> getAll(
+            @RequestParam(required = false) TaskStatus status,
+            @RequestParam(required = false) TaskPriority priority,
+            @PageableDefault(
+                    page = 0,
+                    size = 10,
+                    sort = "createdAt",
+                    direction = Sort.Direction.DESC
+            )
+            Pageable pageable
+    ) {
+        Page<TaskResponse> tasks =
+                taskService.getTasks(status, priority, pageable);
+
         return ResponseEntity.ok(tasks);
     }
 
@@ -47,17 +62,17 @@ public class TaskController {
         return ResponseEntity.ok(taskResponse);
     }
 
-    @GetMapping("/status/{status}")
-    public ResponseEntity<List<TaskResponse>> getByStatus(@PathVariable TaskStatus status){
-        List<TaskResponse> task = taskService.getTaskByStatus(status);
-        return ResponseEntity.ok(task);
-    }
-
-    @GetMapping("/priority/{priority}")
-    public ResponseEntity<List<TaskResponse>> getByPriority(@PathVariable TaskPriority priority){
-        List<TaskResponse> task = taskService.getTaskByPriority(priority);
-        return ResponseEntity.ok(task);
-    }
+//    @GetMapping("/status/{status}")
+//    public ResponseEntity<List<TaskResponse>> getByStatus(@PathVariable TaskStatus status){
+//        List<TaskResponse> task = taskService.getTaskByStatus(status);
+//        return ResponseEntity.ok(task);
+//    }
+//
+//    @GetMapping("/priority/{priority}")
+//    public ResponseEntity<List<TaskResponse>> getByPriority(@PathVariable TaskPriority priority){
+//        List<TaskResponse> task = taskService.getTaskByPriority(priority);
+//        return ResponseEntity.ok(task);
+//    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<TaskResponse> deleteById(@PathVariable Long id){
