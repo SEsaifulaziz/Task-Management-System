@@ -6,6 +6,7 @@ import com.devsaif.task.management.dto.TaskResponse;
 import com.devsaif.task.management.entity.TaskEntity;
 import com.devsaif.task.management.entity.TaskPriority;
 import com.devsaif.task.management.entity.TaskStatus;
+import com.devsaif.task.management.exception.ResourceNotFoundException;
 import com.devsaif.task.management.mapper.TaskMapper;
 import com.devsaif.task.management.repository.TaskRepository;
 import com.devsaif.task.management.service.TaskService;
@@ -26,7 +27,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public TaskResponse createTask(TaskRequest taskRequest) {
         TaskEntity task = taskMapper.toEntity(taskRequest);
-        TaskEntity savedTask = taskRepository .save(task);
+        TaskEntity savedTask = taskRepository.save(task);
 
         return taskMapper.toDto(savedTask);
 
@@ -34,12 +35,15 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public List<TaskResponse> getAllTasks() {
-        return taskRepository.findAll().stream().map(taskMapper::toDto).toList();
+        return taskRepository.findAll()
+                .stream().map(taskMapper::toDto).toList();
     }
 
     @Override
-    public TaskResponse getTaskById() {
-        return null;
+    public TaskResponse getTaskById(Long id) {
+        return taskRepository.findById(id)
+                .map(taskMapper::toDto).orElseThrow(() ->
+                        new ResourceNotFoundException("Task with id " +id+ " not found"));
     }
 
     @Override
