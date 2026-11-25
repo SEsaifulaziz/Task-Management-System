@@ -7,6 +7,7 @@ import com.devsaif.task.management.entity.TaskPriority;
 import com.devsaif.task.management.entity.TaskStatus;
 import com.devsaif.task.management.service.TaskService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -54,6 +55,12 @@ public class TaskController {
     public ResponseEntity<List<TaskResponse>> getByPriority(@PathVariable TaskPriority priority){
         List<TaskResponse> task = taskService.getTaskByPriority(priority);
         return ResponseEntity.ok(task);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<TaskResponse> deleteById(@PathVariable Long id){
+        taskService.deleteTask(id);
+        return ResponseEntity.noContent().build();
     }
 }
 
