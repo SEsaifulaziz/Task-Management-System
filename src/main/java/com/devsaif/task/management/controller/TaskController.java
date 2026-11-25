@@ -5,6 +5,7 @@ import com.devsaif.task.management.dto.TaskResponse;
 import com.devsaif.task.management.entity.TaskPriority;
 import com.devsaif.task.management.entity.TaskStatus;
 import com.devsaif.task.management.service.TaskService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -16,6 +17,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
+@Tag(
+        name = "Task Management",
+        description = "APIs for creating, updating, retrieving and deleting tasks"
+)
 @RestController
 @RequestMapping("/api/tasks")
 @RequiredArgsConstructor
