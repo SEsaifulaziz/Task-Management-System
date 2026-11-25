@@ -14,6 +14,7 @@ import lombok.AllArgsConstructor;
 
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -53,7 +54,23 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public TaskResponse updateTask(Long id, TaskRequest taskRequest) {
-        return null;
+
+        TaskEntity taskEntity = taskRepository.findById(id).orElseThrow(()
+                -> new ResourceNotFoundException("Task with id " +id+ " not found"));
+
+        if(taskEntity == null && taskEntity.equals("")){
+            throw new ResourceNotFoundException("Task with id " +id+ " not found");
+        }
+
+        taskEntity.setCreatedAt(LocalDateTime.now());
+        taskEntity.setDescription(taskRequest.description());
+        taskEntity.setDueDate(taskRequest.dueDate());
+        taskEntity.setPriority(taskRequest.priority());
+        taskEntity.setTitle(taskRequest.title());
+        taskEntity.setStatus(taskRequest.status());
+
+        TaskEntity newTask = taskRepository.save(taskEntity);
+        return taskMapper.toDto(newTask);
     }
 
     @Override
