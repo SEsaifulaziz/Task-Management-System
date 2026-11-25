@@ -2,18 +2,23 @@ package com.devsaif.task.management.dto;
 
 import com.devsaif.task.management.entity.TaskPriority;
 import com.devsaif.task.management.entity.TaskStatus;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
 
-public record TaskRequest (
-    String title,
+public record TaskRequest(
+        @NotBlank(message = "Title is required")
+        @Size(max = 150, message = "Title cannot exceed 150 characters")
+        String title,
 
-    String description,
+        String description,
 
-    TaskStatus status,
+        TaskStatus status,
 
-    TaskPriority priority,
+        TaskPriority priority,
 
-    LocalDate dueDate
+        LocalDate dueDate
 
-) {}
+) {
+}
