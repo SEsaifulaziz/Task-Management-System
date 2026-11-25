@@ -61,11 +61,6 @@ public class TaskServiceImpl implements TaskService {
         TaskEntity taskEntity = taskRepository.findById(id).orElseThrow(()
                 -> new ResourceNotFoundException("Task with id " +id+ " not found"));
 
-        if(taskEntity == null && taskEntity.equals("")){
-            throw new ResourceNotFoundException("Task with id " +id+ " not found");
-        }
-
-        taskEntity.setCreatedAt(LocalDateTime.now());
         taskEntity.setDescription(taskRequest.description());
         taskEntity.setDueDate(taskRequest.dueDate());
         taskEntity.setPriority(taskRequest.priority());
