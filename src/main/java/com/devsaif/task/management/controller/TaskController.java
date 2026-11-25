@@ -3,6 +3,7 @@ package com.devsaif.task.management.controller;
 import com.devsaif.task.management.dto.TaskRequest;
 import com.devsaif.task.management.dto.TaskResponse;
 import com.devsaif.task.management.entity.TaskEntity;
+import com.devsaif.task.management.entity.TaskStatus;
 import com.devsaif.task.management.service.TaskService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -40,6 +41,12 @@ public class TaskController {
         TaskResponse taskResponse = taskService.updateTask(id, taskRequest);
 
         return ResponseEntity.ok(taskResponse);
+    }
+
+    @GetMapping("/status/{status}")
+    public ResponseEntity<List<TaskResponse>> getByStatus(@PathVariable TaskStatus status){
+        List<TaskResponse> task = taskService.getTaskByStatus(status);
+        return ResponseEntity.ok(task);
     }
 }
 
