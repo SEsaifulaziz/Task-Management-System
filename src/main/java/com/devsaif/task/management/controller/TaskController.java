@@ -3,6 +3,7 @@ package com.devsaif.task.management.controller;
 import com.devsaif.task.management.dto.TaskRequest;
 import com.devsaif.task.management.dto.TaskResponse;
 import com.devsaif.task.management.entity.TaskEntity;
+import com.devsaif.task.management.entity.TaskPriority;
 import com.devsaif.task.management.entity.TaskStatus;
 import com.devsaif.task.management.service.TaskService;
 import lombok.RequiredArgsConstructor;
@@ -46,6 +47,12 @@ public class TaskController {
     @GetMapping("/status/{status}")
     public ResponseEntity<List<TaskResponse>> getByStatus(@PathVariable TaskStatus status){
         List<TaskResponse> task = taskService.getTaskByStatus(status);
+        return ResponseEntity.ok(task);
+    }
+
+    @GetMapping("/priority/{priority}")
+    public ResponseEntity<List<TaskResponse>> getByPriority(@PathVariable TaskPriority priority){
+        List<TaskResponse> task = taskService.getTaskByPriority(priority);
         return ResponseEntity.ok(task);
     }
 }
