@@ -5,6 +5,7 @@ import com.devsaif.task.management.dto.TaskResponse;
 import com.devsaif.task.management.entity.TaskEntity;
 import com.devsaif.task.management.entity.TaskPriority;
 import com.devsaif.task.management.entity.TaskStatus;
+import com.devsaif.task.management.exception.ResourceNotFoundException;
 import com.devsaif.task.management.mapper.TaskMapper;
 import com.devsaif.task.management.repository.TaskRepository;
 import org.junit.jupiter.api.Test;
@@ -15,8 +16,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -70,5 +73,30 @@ public class TaskServiceImplTest {
         verify(taskMapper).toEntity(request);
         verify(taskRepository).save(taskEntity);
         verify(taskMapper).toDto(savedTask);
+    }
+
+    @Test
+    void shouldThrowExceptionWhenTaskDoesNotExists() {
+
+        //Arrange
+        Long taskId = 100L;
+
+        when(taskRepository.findById(taskId))
+                .thenReturn(Optional.empty());
+
+        //Act + Assert
+        ResourceNotFoundException exception = assertThrows(
+                ResourceNotFoundException.class,
+                () -> taskService.getTaskById(taskId)
+        );
+
+        assertEquals(
+                "Task with id 100 not found",
+                exception.getMessage()
+        );
+
+        verify(taskRepository).findById(taskId);
+
+        verifyNoInteractions(taskMapper);
     }
 }
