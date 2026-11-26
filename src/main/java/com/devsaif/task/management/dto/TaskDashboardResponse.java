@@ -10,6 +10,6 @@ public class TaskDashboardResponse {
     private long completedTasks;
     private long inProgressTasks;
     private long pendingTasks;
-    private long HighPriorityTasks;
+    private long highPriorityTasks;
     private long overdueTasks;
 }
