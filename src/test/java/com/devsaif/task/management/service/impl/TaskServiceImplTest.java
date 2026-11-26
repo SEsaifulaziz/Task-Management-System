@@ -191,4 +191,22 @@ public class TaskServiceImplTest {
         verifyNoInteractions(taskMapper);
 
     }
+
+
+    @Test
+    void shouldDeleteTaskSuccessfully() {
+        //Arrange
+        Long taskId = 1L;
+        TaskEntity taskEntity = mock(TaskEntity.class);
+
+        when(taskRepository.findById(taskId))
+                .thenReturn(Optional.of(taskEntity));
+
+        // Act
+        taskService.deleteTask(taskId);
+
+        // Assert
+        verify(taskRepository).findById(taskId);
+        verify(taskRepository).deleteById(taskId);
+    }
 }
