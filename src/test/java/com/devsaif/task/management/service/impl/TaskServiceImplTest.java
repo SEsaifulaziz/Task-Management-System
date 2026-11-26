@@ -13,7 +13,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.scheduling.config.Task;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -208,5 +207,29 @@ public class TaskServiceImplTest {
         // Assert
         verify(taskRepository).findById(taskId);
         verify(taskRepository).deleteById(taskId);
+    }
+
+    @Test
+    void shouldThrowExceptionWhenDeletingNonExistingTask() {
+        // Arrange
+        Long taskId = 100L;
+
+        when(taskRepository.findById(taskId))
+                .thenReturn(Optional.empty());
+
+        // Act + Assert
+        ResourceNotFoundException exception = assertThrows(
+                ResourceNotFoundException.class,
+                () -> taskService.deleteTask(taskId)
+        );
+
+        assertEquals(
+                "task with id 100 not found",
+                exception.getMessage()
+        );
+
+        verify(taskRepository).findById(taskId);
+
+        verify(taskRepository, never()).deleteById(taskId);
     }
 }
