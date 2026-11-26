@@ -13,6 +13,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.scheduling.config.Task;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -98,5 +99,60 @@ public class TaskServiceImplTest {
         verify(taskRepository).findById(taskId);
 
         verifyNoInteractions(taskMapper);
+    }
+
+
+    @Test
+    void shouldUpdateTaskSuccessfully() {
+
+        //Arrange
+        Long taskId = 1L;
+
+        TaskRequest request = new TaskRequest(
+                "Update Java assignment",
+                "Complete Spring Boot testing",
+                TaskStatus.IN_PROGRESS,
+                TaskPriority.HIGH,
+                LocalDate.of(2026, 12, 5)
+        );
+
+        TaskEntity existingTask = mock(TaskEntity.class);
+
+        TaskResponse expectedResponse = new TaskResponse(
+                1L,
+                "Update Java assignment",
+                "Complete Spring Boot testing",
+                TaskStatus.IN_PROGRESS,
+                TaskPriority.HIGH,
+                LocalDate.of(2026, 12, 5),
+                LocalDateTime.of(2026, 11, 25, 10, 0)
+        );
+
+        when(taskRepository.findById(taskId))
+                .thenReturn(Optional.of(existingTask));
+
+        when(taskRepository.save(existingTask))
+                .thenReturn(existingTask);
+
+        when(taskMapper.toDto(existingTask))
+                .thenReturn(expectedResponse);
+
+        // Act
+        TaskResponse actualResponse =
+                taskService.updateTask(taskId, request);
+
+        // Assert
+        assertEquals(expectedResponse, actualResponse);
+
+        verify(taskRepository).findById(taskId);
+
+        verify(existingTask).setTitle(request.title());
+        verify(existingTask).setDescription(request.description());
+        verify(existingTask).setStatus(request.status());
+        verify(existingTask).setPriority(request.priority());
+        verify(existingTask).setDueDate(request.dueDate());
+
+        verify(taskRepository).save(existingTask);
+        verify(taskMapper).toDto(existingTask);
     }
 }
