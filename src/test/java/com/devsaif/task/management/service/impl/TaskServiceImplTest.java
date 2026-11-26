@@ -9,7 +9,6 @@ import com.devsaif.task.management.entity.TaskStatus;
 import com.devsaif.task.management.exception.ResourceNotFoundException;
 import com.devsaif.task.management.mapper.TaskMapper;
 import com.devsaif.task.management.repository.TaskRepository;
-import org.assertj.core.api.TemporalAssert;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -58,8 +57,8 @@ public class TaskServiceImplTest {
                 "Finish Spring Boot project",
                 TaskStatus.TODO,
                 TaskPriority.HIGH,
-                LocalDate.of(202, 12, 1),
-                LocalDateTime.of(202, 11, 25, 10, 0)
+                LocalDate.of(2026, 12, 1),
+                LocalDateTime.of(2026, 11, 25, 10, 0)
         );
 
         when(taskMapper.toEntity(request)).thenReturn(taskEntity);
@@ -155,6 +154,38 @@ public class TaskServiceImplTest {
 
         verify(taskRepository).save(existingTask);
         verify(taskMapper).toDto(existingTask);
+    }
+
+    @Test
+    void shouldKeepStatusAndPriorityWhenOmittedOnUpdate() {
+
+        // Arrange
+        Long taskId = 1L;
+
+        TaskRequest request = new TaskRequest(
+                "Only the title changes",
+                null,
+                null,
+                null,
+                null
+        );
+
+        TaskEntity existingTask = mock(TaskEntity.class);
+        TaskResponse expectedResponse = mock(TaskResponse.class);
+
+        when(taskRepository.findById(taskId))
+                .thenReturn(Optional.of(existingTask));
+        when(taskRepository.save(existingTask)).thenReturn(existingTask);
+        when(taskMapper.toDto(existingTask)).thenReturn(expectedResponse);
+
+        // Act
+        taskService.updateTask(taskId, request);
+
+        // Assert
+        verify(existingTask).setTitle("Only the title changes");
+        verify(existingTask, never()).setStatus(any());
+        verify(existingTask, never()).setPriority(any());
+        verify(taskRepository).save(existingTask);
     }
 
     @Test
