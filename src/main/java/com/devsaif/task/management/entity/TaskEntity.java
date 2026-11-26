@@ -2,16 +2,18 @@ package com.devsaif.task.management.entity;
 
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 
-@Data
+@Getter
+@Setter
 @Table(name = "tasks")
 @AllArgsConstructor
 @NoArgsConstructor
@@ -23,8 +25,10 @@ public class TaskEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, length = 150)
     private String title;
 
+    @Column(nullable = false, length = 2000)
     private String description;
 
     @Enumerated(EnumType.STRING)
@@ -35,6 +39,7 @@ public class TaskEntity {
 
     private LocalDate dueDate;
 
+    @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     @PrePersist
