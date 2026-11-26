@@ -1,5 +1,6 @@
 package com.devsaif.task.management.service.impl;
 
+import com.devsaif.task.management.dto.TaskDashboardResponse;
 import com.devsaif.task.management.dto.TaskRequest;
 import com.devsaif.task.management.dto.TaskResponse;
 import com.devsaif.task.management.entity.TaskEntity;
@@ -8,6 +9,7 @@ import com.devsaif.task.management.entity.TaskStatus;
 import com.devsaif.task.management.exception.ResourceNotFoundException;
 import com.devsaif.task.management.mapper.TaskMapper;
 import com.devsaif.task.management.repository.TaskRepository;
+import org.assertj.core.api.TemporalAssert;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -231,5 +233,49 @@ public class TaskServiceImplTest {
         verify(taskRepository).findById(taskId);
 
         verify(taskRepository, never()).deleteById(taskId);
+    }
+
+    @Test
+    void shouldReturnDashBoardStatisticsSuccessfully() {
+        //Arrange
+
+        when(taskRepository.count()).thenReturn(10L);
+
+        when(taskRepository.countByStatus(TaskStatus.COMPLETED))
+                .thenReturn(3L);
+
+        when(taskRepository.countByStatus(TaskStatus.IN_PROGRESS))
+                .thenReturn(2L);
+
+        when(taskRepository.countByStatus(TaskStatus.TODO))
+                .thenReturn(5L);
+
+        when(taskRepository.countByPriority(TaskPriority.HIGH))
+                .thenReturn(4L);
+
+        when(taskRepository.countByDueDateBeforeAndStatusNot(
+                any(LocalDate.class), eq(TaskStatus.COMPLETED)))
+                .thenReturn(2L);
+
+        TaskDashboardResponse expectedResponse =
+                new TaskDashboardResponse(10L, 3L, 2L, 5L, 4L, 2L);
+
+        TaskDashboardResponse actualResponse =
+                taskService.getDashBoardStatistics();
+
+        //Assert
+        assertEquals(expectedResponse, actualResponse);
+
+        verify(taskRepository).count();
+        verify(taskRepository).countByStatus(TaskStatus.COMPLETED);
+        verify(taskRepository).countByStatus(TaskStatus.IN_PROGRESS);
+        verify(taskRepository).countByStatus(TaskStatus.TODO);
+        verify(taskRepository).countByPriority(TaskPriority.HIGH);
+
+        verify(taskRepository).countByDueDateBeforeAndStatusNot(
+                any(LocalDate.class), eq(TaskStatus.COMPLETED)
+        );
+
+
     }
 }
