@@ -155,4 +155,40 @@ public class TaskServiceImplTest {
         verify(taskRepository).save(existingTask);
         verify(taskMapper).toDto(existingTask);
     }
+
+    @Test
+    void shouldThrowExceptionWhenUpdatingNonExistingTask() {
+
+        // Arrange
+        Long taskId = 100L;
+
+        TaskRequest request = new TaskRequest(
+                "Updated task",
+                "Updated description",
+                TaskStatus.IN_PROGRESS,
+                TaskPriority.HIGH,
+                LocalDate.of(2026, 12, 5)
+        );
+
+        when(taskRepository.findById(taskId))
+                .thenReturn(Optional.empty());
+
+        // Act + Assert
+        ResourceNotFoundException exception = assertThrows(
+                ResourceNotFoundException.class,
+                () -> taskService.updateTask(taskId, request)
+        );
+
+        assertEquals(
+                "Task with id 100 not found",
+                exception.getMessage()
+        );
+
+        verify(taskRepository).findById(taskId);
+
+        verify(taskRepository, never()).save(any(TaskEntity.class));
+
+        verifyNoInteractions(taskMapper);
+
+    }
 }
