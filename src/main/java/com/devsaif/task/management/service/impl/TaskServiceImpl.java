@@ -54,8 +54,7 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public void deleteTask(Long id) {
-
-        TaskEntity taskEntity = taskRepository.findById(id)
+        taskRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("task with id " +id+ " not found"));
         taskRepository.deleteById(id);
     }
@@ -68,9 +67,14 @@ public class TaskServiceImpl implements TaskService {
 
         taskEntity.setDescription(taskRequest.description());
         taskEntity.setDueDate(taskRequest.dueDate());
-        taskEntity.setPriority(taskRequest.priority());
         taskEntity.setTitle(taskRequest.title());
-        taskEntity.setStatus(taskRequest.status());
+
+        if(taskRequest.status() !=null){
+            taskEntity.setStatus(taskRequest.status());
+        }
+        if(taskRequest.priority() !=null){
+            taskEntity.setPriority(taskRequest.priority());
+        }
 
         TaskEntity newTask = taskRepository.save(taskEntity);
         return taskMapper.toDto(newTask);
